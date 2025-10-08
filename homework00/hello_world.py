@@ -1,2 +1,6 @@
+"""Простая программа с функцией text()."""
+
+
 def text():
-    return message
+    """Возвращает 'message'."""
+    return "message"
