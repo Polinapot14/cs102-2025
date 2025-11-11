@@ -12,7 +12,7 @@ def is_prime(n: int) -> bool:
     >>> is_prime(8)
     False
     """
-    if n == 1:
+    if n <= 1:
         return False
 
     cnt = 0
@@ -111,7 +111,7 @@ def decrypt(pk: tp.Tuple[int, int], ciphertext: tp.List[int]) -> str:
     return "".join(plain)
 
 
-print(multiplicative_inverse(72, 25))
+
 
 if __name__ == "__main__":
     print("RSA Encrypter/ Decrypter")
