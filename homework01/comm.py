@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 def decrypt_poly_shift(ciphertext: str, odd_shift: int, even_shift: int) -> str:
     plaintext = ""
     a_ord = ord("а")
@@ -15,6 +14,3 @@ def decrypt_poly_shift(ciphertext: str, odd_shift: int, even_shift: int) -> str:
             plaintext += elem
 
     return plaintext
-=======
-
->>>>>>> bf315dd0d5a867e112f0c1816cfd1ce78083658e
