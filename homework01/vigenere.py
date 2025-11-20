@@ -15,19 +15,21 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
         new_keyword += keyword
     keyword = new_keyword.lower()
 
-    for i in range(len(plaintext)):
-        char = plaintext[i]
-
+    for i, char in enumerate(plaintext):
         if not char.isalpha():
             ciphertext += char
             continue
-
-        shift = ord(keyword[i]) - 97
-        if char.islower():
+        elif char.islower():
+            # 97, 26 - это числа, используемые в формуле для получаения
+            # ascii-кода после сдвига
+            shift = ord(keyword[i]) - 97
             x = ord(char)
             new_x = (((x - 97) + shift) % 26) + 97
             ciphertext += chr(new_x)
         else:
+            # 97, 65 и 26 - это числа, используемые в формуле для получаения
+            # ascii-кода после сдвига
+            shift = ord(keyword[i]) - 97
             x = ord(char)
             new_x = (((x - 65) + shift) % 26) + 65
             ciphertext += chr(new_x)
@@ -58,13 +60,17 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
         if not char.isalpha():
             plaintext += char
             continue
-
-        shift = ord(keyword[i]) - 97
-        if char.islower():
+        elif char.islower():
+            # 97, 26 - это числа, используемые в формуле для получаения
+            # ascii-кода после сдвига
+            shift = ord(keyword[i]) - 97
             x = ord(char)
             new_x = (((x - 97) - shift) % 26) + 97
             plaintext += chr(new_x)
         else:
+            # 97, 65 и 26 - это числа, используемые в формуле для получаения
+            # ascii-кода после сдвига
+            shift = ord(keyword[i]) - 97
             x = ord(char)
             new_x = (((x - 65) - shift) % 26) + 65
             plaintext += chr(new_x)
