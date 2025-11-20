@@ -1,6 +1,6 @@
 import random
 import typing as tp
-from math import sqrt, ceil
+from math import ceil, sqrt
 
 
 def is_prime(n: int) -> bool:
