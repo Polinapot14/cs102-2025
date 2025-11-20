@@ -2,6 +2,7 @@ import random
 import typing as tp 
 from math import ceil, sqrt 
  
+ 
 def is_prime(n: int) -> bool: 
     """ 
     Tests to see if a number is prime. 
@@ -14,7 +15,7 @@ def is_prime(n: int) -> bool:
     """ 
     if n <= 1: 
         return False 
-         
+     
     if n == 2: 
         return True 
  
