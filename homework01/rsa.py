@@ -1,5 +1,6 @@
 import random
 import typing as tp
+from math import sqrt, ceil
 
 
 def is_prime(n: int) -> bool:
@@ -15,15 +16,9 @@ def is_prime(n: int) -> bool:
     if n <= 1:
         return False
 
-    cnt = 0
-    i = 2
-    while i * i <= n:
+    for i in range(2, ceil(sqrt(n))):
         if n % i == 0:
-            cnt += 1
-        i += 1
-
-    if cnt != 0:
-        return False
+            return False
 
     return True
 
