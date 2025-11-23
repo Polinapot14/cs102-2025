@@ -1,17 +1,18 @@
-import random 
-import typing as tp 
+import random
+import typing as tp
 from math import ceil, sqrt
- 
-def is_prime(n: int) -> bool: 
-    """ 
-    Tests to see if a number is prime. 
-    >>> is_prime(2) 
-    True 
-    >>> is_prime(11) 
-    True 
-    >>> is_prime(8) 
-    False 
-    """ 
+
+
+def is_prime(n: int) -> bool:
+    """
+    Tests to see if a number is prime.
+    >>> is_prime(2)
+    True
+    >>> is_prime(11)
+    True
+    >>> is_prime(8)
+    False
+    """
     if n <= 1: 
         return False 
      
