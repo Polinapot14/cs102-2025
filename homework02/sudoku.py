@@ -1,5 +1,8 @@
 import pathlib
+import random
 import typing as tp
+import time
+import multiprocessing
 
 T = tp.TypeVar("T")
 
@@ -41,7 +44,15 @@ def group(values: tp.List[T], n: int) -> tp.List[tp.List[T]]:
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    pass
+
+    res = []
+    for i in range(0, len(values)):
+        if i % n == 0:
+            res.append([values[i]])
+        else:
+            res[-1].append(values[i])
+
+    return res
 
 
 def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -53,7 +64,9 @@ def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_row([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (2, 0))
     ['.', '8', '9']
     """
-    pass
+
+    row, col = pos
+    return grid[row]
 
 
 def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -65,7 +78,10 @@ def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    pass
+
+    row, col = pos
+    res = [grid[i][col] for i in range(len(grid))]
+    return res
 
 
 def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -78,7 +94,14 @@ def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[s
     >>> get_block(grid, (8, 8))
     ['2', '8', '.', '.', '.', '5', '.', '7', '9']
     """
-    pass
+
+    row, col = pos
+
+    res = []
+    for i in range(row - (row % 3), row +  3 - (row % 3)):
+        for j in range(col - (col % 3), col +  3 - (col % 3)):
+            res.append(grid[i][j])
+    return res
 
 
 def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[int, int]]:
@@ -90,7 +113,13 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
     >>> find_empty_positions([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']])
     (2, 0)
     """
-    pass
+    n = len(grid)
+    for i in range(n):
+        for j in range(n):
+            if grid[i][j] == '.':
+                return (i, j)
+
+    return (-1, -1)
 
 
 def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.Set[str]:
@@ -103,7 +132,13 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     >>> values == {'2', '5', '9'}
     True
     """
-    pass
+
+    row = set(get_row(grid, pos))
+    col = set(get_col(grid, pos))
+    block = set(get_block(grid, pos))
+
+    res = {str(i) for i in range(1, 10)} - (row | col | block)
+    return res
 
 
 def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
@@ -118,13 +153,44 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
     >>> solve(grid)
     [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
     """
-    pass
+
+    pos = find_empty_positions(grid)
+    if pos == (-1, -1):
+        return grid
+
+    values = find_possible_values(grid, pos)
+    row, col = pos
+
+    for value in values:
+        grid[row][col] = value
+        res = solve(grid)
+        if not res is None:
+            return res
+        grid[row][col] = '.'
 
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     """ Если решение solution верно, то вернуть True, в противном случае False """
-    # TODO: Add doctests with bad puzzles
-    pass
+
+    digits = set('123456789')
+
+    for i in range(9):
+        row = set(solution[i])
+        if row != digits:
+            return False
+
+    for j in range(9):
+        col = set(get_col(solution,(0, j)))
+        if col != digits:
+            return False
+
+    for i in range(0, 9, 3):
+        for j in range(0, 9, 3):
+            block = set(get_block(solution, (i, j)))
+            if block != digits:
+                return False
+
+    return True
 
 
 def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
@@ -148,15 +214,31 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     >>> check_solution(solution)
     True
     """
-    pass
+
+    grid = [['.' for j in range(9)] for i in range(9)]
+    puzzle = solve(grid)
+
+    remove_cnt = 81 - N
+
+    positions = [(i, j) for i in range(9) for j in range(9)]
+    random.shuffle(positions)
+
+    for i in range(remove_cnt):
+        i, j = positions.pop()
+        puzzle[i][j] = '.'
+
+    return puzzle
+
+
+def run_solve(filename: str) -> None:
+    grid = read_sudoku(filename)
+    start = time.time()
+    solve(grid)
+    end = time.time()
+    print(f"{filename}: {end-start}")
 
 
 if __name__ == "__main__":
-    for fname in ["puzzle1.txt", "puzzle2.txt", "puzzle3.txt"]:
-        grid = read_sudoku(fname)
-        display(grid)
-        solution = solve(grid)
-        if not solution:
-            print(f"Puzzle {fname} can't be solved")
-        else:
-            display(solution)
+    for filename in ("puzzle1.txt", "puzzle2.txt", "puzzle3.txt"):
+        p = multiprocessing.Process(target=run_solve, args=(filename,))
+        p.start()
