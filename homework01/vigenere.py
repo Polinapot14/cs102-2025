@@ -1,4 +1,4 @@
-def encrypt_vigenere(plaintext: str, keyword: str) -> str:
+=def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     """
     Encrypts plaintext using a Vigenere cipher.
     >>> encrypt_vigenere("PYTHON", "A")
@@ -20,18 +20,23 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
             ciphertext += char
             continue
         elif char.islower():
-            # 97, 26 - это числа, используемые в формуле для получаения
+            # a, b - это числа, используемые в формуле для получаения
             # ascii-кода после сдвига
-            shift = ord(keyword[i]) - 97
+            a = 97
+            b = 26
+            shift = ord(keyword[i]) - a
             x = ord(char)
-            new_x = (((x - 97) + shift) % 26) + 97
+            new_x = (((x - a) + shift) % b) + a
             ciphertext += chr(new_x)
         else:
-            # 97, 65 и 26 - это числа, используемые в формуле для получаения
+            # a, b и c - это числа, используемые в формуле для получаения
             # ascii-кода после сдвига
-            shift = ord(keyword[i]) - 97
+            a = 97
+            b = 65
+            c = 26
+            shift = ord(keyword[i]) - a
             x = ord(char)
-            new_x = (((x - 65) + shift) % 26) + 65
+            new_x = (((x - b) + shift) % c) + b
             ciphertext += chr(new_x)
 
     return ciphertext
@@ -61,18 +66,23 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
             plaintext += char
             continue
         elif char.islower():
-            # 97, 26 - это числа, используемые в формуле для получаения
+            # a, b - это числа, используемые в формуле для получаения
             # ascii-кода после сдвига
-            shift = ord(keyword[i]) - 97
+            a = 97
+            b = 26
+            shift = ord(keyword[i]) - a
             x = ord(char)
-            new_x = (((x - 97) - shift) % 26) + 97
+            new_x = (((x - a) - shift) % b) + a
             plaintext += chr(new_x)
         else:
-            # 97, 65 и 26 - это числа, используемые в формуле для получаения
+            # a, b и c - это числа, используемые в формуле для получаения
             # ascii-кода после сдвига
-            shift = ord(keyword[i]) - 97
+            a = 97
+            b = 65
+            c = 26
+            shift = ord(keyword[i]) - a
             x = ord(char)
-            new_x = (((x - 65) - shift) % 26) + 65
+            new_x = (((x - b) - shift) % c) + b
             plaintext += chr(new_x)
 
     return plaintext
