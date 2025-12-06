@@ -18,15 +18,19 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
             continue
         elif char.islower():
             ascii_ = ord(char)
-            # 97 и 26 - это числа, используемые в формуле для получаения
+            # a и b - это числа, используемые в формуле для получаения
             # ascii-кода после сдвига
-            new_ascii_ = (((ascii_ - 97) + shift) % 26) + 97
+            a = 97
+            b = 26
+            new_ascii_ = (((ascii_ - a) + shift) % b) + a
             ciphertext += chr(new_ascii_)
         else:
             ascii_ = ord(char)
-            # 65 и 26 - это числа, используемые в формуле для получаения
+            # a и b - это числа, используемые в формуле для получаения
             # ascii-кода после сдвига
-            new_ascii_ = (((ascii_ - 65) + shift) % 26) + 65
+            a = 65
+            b = 26
+            new_ascii_ = (((ascii_ - a) + shift) % b) + a
             ciphertext += chr(new_ascii_)
 
     return ciphertext
@@ -52,15 +56,19 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
             continue
         elif char.islower():
             ascii_ = ord(char)
-            # 97 и 26 - это числа, используемые в формуле для получаения
+            # a и b - это числа, используемые в формуле для получаения
             # ascii-кода после сдвига
-            new_ascii_ = (((ascii_ - 97) - shift) % 26) + 97
+            a = 97
+            b = 26
+            new_ascii_ = (((ascii_ - a) - shift) % b) + a
             plaintext += chr(new_ascii_)
         else:
             ascii_ = ord(char)
-            # 65 и 26 - это числа, используемые в формуле для получаения
+            # a и b - это числа, используемые в формуле для получаения
             # ascii-кода после сдвига
-            new_ascii_ = (((ascii_ - 65) - shift) % 26) + 65
+            a = 65
+            b = 26
+            new_ascii_ = (((ascii_ - a) - shift) % b) + a
             plaintext += chr(new_ascii_)
 
     return plaintext
