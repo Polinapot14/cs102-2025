@@ -129,38 +129,34 @@ def shortest_path(
     """
 
     x, y = exit_coord
-    if not isinstance(grid[x][y], int):
+
+    cell = grid[x][y]
+    if not isinstance(cell, int):
         return None
 
-    if grid[x][y] == 1:
-        return [(x, y)]
-
+    k = cell
     path = [(x, y)]
-    k = grid[x][y]
     rows = len(grid)
     cols = len(grid[0])
 
     while k != 1:
-        moved = False
-
-        if x - 1 >= 0 and grid[x - 1][y] == k - 1:
+        if x - 1 >= 0 and isinstance(grid[x - 1][y], int) and grid[x - 1][y] == k - 1:
             x = x - 1
-            moved = True
-        elif x + 1 < rows and grid[x + 1][y] == k - 1:
+        elif x + 1 < rows and isinstance(grid[x + 1][y], int) and grid[x + 1][y] == k - 1:
             x = x + 1
-            moved = True
-        elif y - 1 >= 0 and grid[x][y - 1] == k - 1:
+        elif y - 1 >= 0 and isinstance(grid[x][y - 1], int) and grid[x][y - 1] == k - 1:
             y = y - 1
-            moved = True
-        elif y + 1 < cols and grid[x][y + 1] == k - 1:
+        elif y + 1 < cols and isinstance(grid[x][y + 1], int) and grid[x][y + 1] == k - 1:
             y = y + 1
-            moved = True
-
-        if not moved:
+        else:
             return None
 
         path.append((x, y))
-        k = grid[x][y]
+
+        cell = grid[x][y]
+        if not isinstance(cell, int):
+            return None
+        k = cell
 
     return path
 
