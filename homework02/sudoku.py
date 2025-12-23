@@ -8,7 +8,7 @@ T = tp.TypeVar("T")
 
 
 def read_sudoku(path: tp.Union[str, pathlib.Path]) -> tp.List[tp.List[str]]:
-    """ Прочитать Судоку из указанного файла """
+    """Прочитать Судоку из указанного файла"""
     path = pathlib.Path(path)
     with path.open() as f:
         puzzle = f.read()
@@ -22,15 +22,11 @@ def create_grid(puzzle: str) -> tp.List[tp.List[str]]:
 
 
 def display(grid: tp.List[tp.List[str]]) -> None:
-    """Вывод Судоку """
+    """Вывод Судоку"""
     width = 2
     line = "+".join(["-" * (width * 3)] * 3)
     for row in range(9):
-        print(
-            "".join(
-                grid[row][col].center(width) + ("|" if str(col) in "25" else "") for col in range(9)
-            )
-        )
+        print("".join(grid[row][col].center(width) + ("|" if str(col) in "25" else "") for col in range(9)))
         if str(row) in "25":
             print(line)
     print()
@@ -98,8 +94,8 @@ def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[s
     row, col = pos
 
     res = []
-    for i in range(row - (row % 3), row +  3 - (row % 3)):
-        for j in range(col - (col % 3), col +  3 - (col % 3)):
+    for i in range(row - (row % 3), row + 3 - (row % 3)):
+        for j in range(col - (col % 3), col + 3 - (col % 3)):
             res.append(grid[i][j])
     return res
 
@@ -116,7 +112,7 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
     n = len(grid)
     for i in range(n):
         for j in range(n):
-            if grid[i][j] == '.':
+            if grid[i][j] == ".":
                 return (i, j)
 
     return (-1, -1)
@@ -142,8 +138,8 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
 
 
 def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
-    """ Решение пазла, заданного в grid """
-    """ Как решать Судоку?
+    """Решение пазла, заданного в grid"""
+    """Как решать Судоку?
         1. Найти свободную позицию
         2. Найти все возможные значения, которые могут находиться на этой позиции
         3. Для каждого возможного значения:
@@ -164,15 +160,15 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
     for value in values:
         grid[row][col] = value
         res = solve(grid)
-        if not res is None:
+        if res is not None:
             return res
-        grid[row][col] = '.'
+        grid[row][col] = "."
 
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
-    """ Если решение solution верно, то вернуть True, в противном случае False """
+    """Если решение solution верно, то вернуть True, в противном случае False"""
 
-    digits = set('123456789')
+    digits = set("123456789")
 
     for i in range(9):
         row = set(solution[i])
@@ -180,7 +176,7 @@ def check_solution(solution: tp.List[tp.List[str]]) -> bool:
             return False
 
     for j in range(9):
-        col = set(get_col(solution,(0, j)))
+        col = set(get_col(solution, (0, j)))
         if col != digits:
             return False
 
@@ -215,7 +211,7 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     True
     """
 
-    grid = [['.' for j in range(9)] for i in range(9)]
+    grid = [["." for j in range(9)] for i in range(9)]
     puzzle = solve(grid)
 
     remove_cnt = 81 - N
@@ -223,9 +219,9 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     positions = [(i, j) for i in range(9) for j in range(9)]
     random.shuffle(positions)
 
-    for i in range(remove_cnt):
+    for _ in range(remove_cnt):
         i, j = positions.pop()
-        puzzle[i][j] = '.'
+        puzzle[i][j] = "."
 
     return puzzle
 
@@ -239,6 +235,11 @@ def run_solve(filename: str) -> None:
 
 
 if __name__ == "__main__":
+    processes = []
     for filename in ("puzzle1.txt", "puzzle2.txt", "puzzle3.txt"):
         p = multiprocessing.Process(target=run_solve, args=(filename,))
         p.start()
+        processes.append(p)
+
+    for p in processes:
+        p.join()
