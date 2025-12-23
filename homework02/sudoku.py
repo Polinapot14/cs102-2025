@@ -115,7 +115,7 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
             if grid[i][j] == ".":
                 return (i, j)
 
-    return (-1, -1)
+    return None
 
 
 def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.Set[str]:
@@ -151,7 +151,7 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
     """
 
     pos = find_empty_positions(grid)
-    if pos == (-1, -1):
+    if pos is None:
         return grid
 
     values = find_possible_values(grid, pos)
@@ -163,6 +163,8 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
         if res is not None:
             return res
         grid[row][col] = "."
+
+    return None
 
 
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
@@ -213,6 +215,8 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
 
     grid = [["." for j in range(9)] for i in range(9)]
     puzzle = solve(grid)
+    if puzzle is None:
+        raise ValueError("Failed to generate sudoku")
 
     remove_cnt = 81 - N
 
